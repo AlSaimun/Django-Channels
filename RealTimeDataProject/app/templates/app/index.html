@@ -7,9 +7,16 @@
 </head>
 <body>
     <h1>Wellcome</h1>
+    <h1 style= "margin: auto">Random Number genarator: </h1>
+    <div style="background-color: red; height: 150px; width: 150px; display: flex; align-items: center; justify-content: center; margin: auto;">
+        <h1 id="cnt" style="color: white;">Your Content</h1>
+    </div>
     <script>
         var ws = new WebSocket('ws://127.0.0.1:8000/ws/sc/') 
+        <!-- Type 1 for show data-->
         {% comment %} 
+
+
         <!-- Websocket connection -->
             ws.onopen = function(){
             console.log('WebSocket connection open..')
@@ -31,13 +38,35 @@
             console.log('WebSocket connection closed...', event)
         } {% endcomment %}
 
+
+
+        <!-- Type 2 for show data-->
+
         ws.addEventListener('open', () => {
             console.log('WebSocket connection open..')
             ws.send('Message from client....') 
         })
+
+        
+        {% comment %} 
+        <!-- when message from server is a sigle string like that 'data': otp then we can use it-->
         ws.addEventListener('message', (event) => {
+        
             console.log('Message from server...', event)
+            // set id cnt = even.data
+            document.getElementById('cnt').innerText = event.data 
+        }) 
+        {% endcomment %}
+
+        ws.addEventListener('message', (event) => {
+            // when message from server is a sigle string like that 'data': otp then we can use it
+            console.log('Message from server...', event)
+            console.log('Type of Event: ', typeof(event.data))
+            var data = JSON.parse(event.data) // convert javascrift object
+            console.log('Type of data: ', typeof(data))
+            document.getElementById('cnt').innerText = data.otp // {"otp": otp}
         })
+
         ws.addEventListener('error', (event) => {
             console.log('Someting Error...', event)
         })

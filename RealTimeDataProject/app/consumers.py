@@ -2,6 +2,16 @@ from channels.consumer import SyncConsumer, AsyncConsumer
 from channels.exceptions import StopConsumer
 from time import sleep
 import asyncio
+import string, random
+import json
+
+
+def generate_number(otp_size=6): 
+        ''' generates 6 digits otp for password reset '''
+        digits = string.digits 
+        otp = ''.join([random.choice(digits) for _ in range(otp_size)])
+        return otp 
+
 
 
 class MySyncConsumer(SyncConsumer):
@@ -14,10 +24,12 @@ class MySyncConsumer(SyncConsumer):
     def websocket_receive(self, event):
         print('Message sent...',event)
 
-        for i in range(10): # send response 
+        for i in range(50): # send response 
             self.send({
                 'type':'websocket.send',
-                'text': str(i)
+                # 'text': generate_number() # send string data
+                # when need to send dictionary type data and dumps method convert dict into string / json
+                'text': json.dumps({'otp':generate_number()})
             })
             sleep(1)
 
