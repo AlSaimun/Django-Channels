@@ -3,5 +3,5 @@ from . import consumers
 
 
 websocket_urlpatterns = [
-    path('ws/sc/', consumers.MySyncConsumer.as_asgi())
+    path('ws/sc/<str:group_name>/', consumers.MySyncConsumer.as_asgi())
 ]

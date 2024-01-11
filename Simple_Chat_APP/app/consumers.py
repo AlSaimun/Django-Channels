@@ -8,6 +8,7 @@ class MySyncConsumer(SyncConsumer):
         print("Websocket Connection.......", event)
         print('Channel layer: ', self.channel_layer) # default channel layer
         print('Channel Name: ', self.channel_name) # default channel name
+        # print('group-name: ', self.scope['url_route']['kwargs']['group_name'])
         print()
         ''' 
         ## group_add() -> this method add a channel to a certain group
@@ -15,7 +16,8 @@ class MySyncConsumer(SyncConsumer):
         This method add this channel into the group
         It's a async method in sycConsumer we need to convert this method into sync mehtod
         '''
-        async_to_sync(self.channel_layer.group_add)('beckar_somiti', self.channel_name) # add a static group named 'beckar_somiti'
+        self.group_name = self.scope['url_route']['kwargs']['group_name']
+        async_to_sync(self.channel_layer.group_add)(self.group_name, self.channel_name) # add a static group named 'beckar_somiti'
 
         self.send({
             'type': 'websocket.accept'
@@ -23,7 +25,7 @@ class MySyncConsumer(SyncConsumer):
 
     def websocket_receive(self, event):
         print("Websocket message received.......", event)
-        async_to_sync(self.channel_layer.group_send)('beckar_somiti', {  # send message to group
+        async_to_sync(self.channel_layer.group_send)(self.group_name, {  # send message to group
             'type': 'chat.message', # own event, we can write any thing but we need to create handler for this event
             'message': event['text'],
         })
@@ -48,6 +50,6 @@ class MySyncConsumer(SyncConsumer):
         It's a async method in sycConsumer we need to convert this method into sync mehtod    
         '''
 
-        async_to_sync(self.channel_layer.group_discard)('beckar_somiti', self.channel_name) # discard this channel from this group
+        async_to_sync(self.channel_layer.group_discard)(self.group_name, self.channel_name) # discard this channel from this group
         raise StopConsumer()
  

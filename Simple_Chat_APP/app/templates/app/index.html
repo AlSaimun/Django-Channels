@@ -8,11 +8,20 @@
 <body>
     <h1>Chat Box</h1>
     <textarea name="" id="chat-box" cols="100" rows="20"></textarea> <br>
-    <input type="text" id ="message-input" size="115" style="border: 4px solid blue" placeholder="Enter message"> <br>
+    <input type="text" id ="message-input" size="102" style="border: 4px solid blue" placeholder="Enter message"> <br>
     <input type="button" value= "Send" id ="message-submit" style="height: 30px; width: 50px;"> <br>
-
+    {{group_name|json_script:"group-name"}}
     <script>
-        var ws = new WebSocket('ws://127.0.0.1:8000/ws/sc/')
+        const group_name = JSON.parse(document.getElementById('group-name').textContent)
+        console.log('group-name: ', typeof(group_name))
+        // var ws = new WebSocket('ws://127.0.0.1:8000/ws/sc/')
+        var ws = new WebSocket(
+            'ws://' 
+            + window.location.host
+            + '/ws/sc/'
+            + group_name 
+            + '/'
+        )
 
         ws.onopen = function(){
             console.log('WebSocket connection open...')
