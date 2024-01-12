@@ -7,7 +7,11 @@
 </head>
 <body>
     <h1>Chat Box</h1>
-    <textarea name="" id="chat-box" cols="100" rows="20"></textarea> <br>
+    <textarea name="" id="chat-box" cols="100" rows="20">
+        {% for chat in chats %}
+            {{chat.content}}    
+        {% endfor %}
+    </textarea> <br>
     <input type="text" id ="message-input" size="102" style="border: 4px solid blue" placeholder="Enter message"> <br>
     <input type="button" value= "Send" id ="message-submit" style="height: 30px; width: 50px;"> <br>
     {{group_name|json_script:"group-name"}}
@@ -18,7 +22,7 @@
         var ws = new WebSocket(
             'ws://' 
             + window.location.host
-            + '/ws/sc/'
+            + '/ws/asc/'
             + group_name 
             + '/'
         )
